@@ -170,7 +170,7 @@ server <- function(input, output, session) {
         
         annot1 <- function(x, this_day){
             min_time <- min(x$SolveTime[x$Day2==this_day])
-            this_label <- sprintf("%d:%d", floor(min_time/60), min_time %% 60)
+            this_label <- sprintf("%d:%02d", floor(min_time/60), min_time %% 60)
             out <- annotate("text", 
                             x=this_day, 
                             y=give.DOW_min_ypos(thisrange_df, this_day), 
