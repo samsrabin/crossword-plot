@@ -141,7 +141,7 @@ server <- function(input, output, session) {
                   legend.text=element_text(size=12)) +
             scale_color_brewer(palette="Paired") +
             labs(color = element_blank()) +
-            scale_y_continuous(limits = c(0, max(thisrange_df$SolveTime)/60+1.5),
+            scale_y_continuous(limits = c(-2, max(thisrange_df$SolveTime)/60+1.5),
                                expand = c(0,0)) +
             annotate(geom="label", x=as_date(give.DOW_max_date(thisrange_df, "Sun")), 
                      y=give.DOW_max_ypos(thisrange_df, "Sun"), 
