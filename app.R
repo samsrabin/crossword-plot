@@ -9,7 +9,7 @@
 
 library(shiny)
 
-source("/Users/sam/Documents/Dropbox/1987_Personal/Fun/Crosswords/CrosswordPlot/setup_import.R")
+source("setup_import.R")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
