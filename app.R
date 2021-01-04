@@ -14,8 +14,8 @@ source("setup_import.R")
 # Define UI for application that draws a histogram
 ui <- fluidPage(
     
-    # Application title
-    titlePanel("My NYT Crossword Times"),
+    # # Application title
+    # titlePanel("My NYT Crossword Times"),
     
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
