@@ -147,30 +147,7 @@ server <- function(input, output, session) {
             scale_color_manual(values=mypalette) +
             labs(color = element_blank()) +
             scale_y_continuous(limits = c(-2, max(thisrange_df$SolveTime)/60+1.5),
-                               expand = c(0,0)) +
-            annotate(geom="label", x=as_date(give.DOW_max_date(thisrange_df, "Sun")), 
-                     y=give.DOW_max_ypos(thisrange_df, "Sun"), 
-                     label=give.DOW_max_date(thisrange_df, "Sun"), 
-                     size=outlier_label_size, 
-                     hjust=-0.1, vjust=1, fill="#FCBE75") +
-            annotate(geom="label", x=as_date(give.DOW_max_date(thisrange_df, "Wed")), 
-                     y=give.DOW_max_ypos(thisrange_df, "Wed"), 
-                     label=give.DOW_max_date(thisrange_df, "Wed"), 
-                     size=outlier_label_size, 
-                     hjust=-0.1, vjust=1, fill="#B3DE8E") +
-            annotate(geom="label", x=as_date(give.DOW_max_date(thisrange_df, "Sat")), 
-                     y=give.DOW_max_ypos(thisrange_df, "Sat"), 
-                     label=give.DOW_max_date(thisrange_df, "Sat"), 
-                     size=outlier_label_size, 
-                     hjust=1, vjust=0.2, fill="#E01F27", color="white") +
-            annotate(geom="label", x=as_date(give.DOW_max_date(thisrange_df, "Fri")), 
-                     y=give.DOW_max_ypos(thisrange_df, "Fri"), 
-                     label=give.DOW_max_date(thisrange_df, "Fri"), 
-                     size=outlier_label_size, 
-                     hjust=-0.1, vjust=1, fill="#F99B9B", color="white") #+
-        #scale_x_date(breaks = seq(as_date("2019-01-01"), as_date("2020-01-31"), by="month"), labels = c("Jan. '19", rep("", 2), "Apr. '19", rep("", 2), "Jul. '19", rep("", 2), "Oct. '19", rep("", 2), "Jan. '20"))
-        
-        #ggMarginal(plot_scatter, type = "boxplot", margins = "y", fill="transparent", groupColour=TRUE)
+                               expand = c(0,0))
         
         
         annot1 <- function(x, this_day){
