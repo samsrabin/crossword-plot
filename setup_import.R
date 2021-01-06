@@ -12,6 +12,8 @@ library(cowplot)
 library(airtabler)
 #library(chron)
 
+daylist = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+
 xwords_airtable_obj <- 
   airtable(
     base = "appswGBfJabphdFCx", 

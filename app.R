@@ -17,44 +17,51 @@ ui <- fluidPage(
     # # Application title
     # titlePanel("My NYT Crossword Times"),
     
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-            # Input: Specification of range within an interval
-            sliderInput("daterange", "Date range:",
-                        min = as.Date("2019-01-07"), max = as.Date(Sys.Date()),
-                        value = c(as.Date("2019-01-07"), as.Date(Sys.Date())),
-                        timeFormat="%Y-%m-%d")
+    title = "My NYT Crossword Times",
+    
+    # Show a plot of the generated distribution
+    plotOutput("xwplot"),
+
+    hr(),
+    
+    fluidRow(
+        
+        # Input: Specification of range within an interval
+        column(6, offset = 1,
+               sliderInput("daterange", "Date range:",
+                           min = as.Date("2019-01-07"), max = as.Date(Sys.Date()),
+                           value = c(as.Date("2019-01-07"), as.Date(Sys.Date())),
+                           timeFormat="%Y-%m-%d", 
+                           width = "100%")
         ),
         
-        # Show a plot of the generated distribution
-        mainPanel(
-            plotOutput("xwplot")
-            # tableOutput("values")
+        # Input: Days to include
+        column(4, offset = 1,
+               checkboxGroupInput("incldays", "Days to include",
+                                  daylist,
+                                  selected = daylist,
+                                  width = "100%")
         )
     )
-    
+
+
 )
 
-# Define server logic required to draw a histogram ----
+# Define server logic ----
 server <- function(input, output, session) {
+    
+    # autoWidth=TRUE and scrollX=T required for fluidRow columns to work properly
+    # https://stackoverflow.com/questions/34850382/setting-column-width-in-r-shiny-datatable-does-not-work-in-case-of-lots-of-colum
+    options = list(autoWidth = TRUE,
+                   scrollX = T)
     
     # Reactive expression to create data frame of all input values
     sliderValues <- reactive({
-        
         data.frame(
             Name = c("DateRange"),
             Value = input$daterange,
             stringsAsFactors = FALSE)
-        
     })
-    
-    # Show the values in an HTML table ----
-    output$values <- renderTable({
-        sliderValues()
-    })
-    
-    
     
     output$xwplot <- renderPlot({
         
@@ -63,16 +70,11 @@ server <- function(input, output, session) {
         thisrange_df = xwords_df[xwords_df$PuzzleDate>=as.Date(DateRange[1]) & xwords_df$PuzzleDate<=as.Date(DateRange[2]),]
         thisrange_df = thisrange_df[order(thisrange_df$PuzzleDate),]
         
-        # # Get week number (in streak)
-        # w <- 0
-        # for (d in seq(1, length(thisrange_df$PuzzleDate))) {
-        #     thisDOW <- as.character(thisrange_df$Day2[d])
-        #     if (thisDOW=="Mon") {
-        #         print(thisDOW)
-        #         w <- w + 1
-        #     }
-        #     thisrange_df$WeekNum[d] <- w
-        # }
+        for (d in daylist) {
+            if (!any(input$incldays==d)) {
+                thisrange_df = thisrange_df[thisrange_df$Day != d,]
+            }
+        }
         
         # Ancillaries
         give.n <- function(x){
@@ -120,6 +122,9 @@ server <- function(input, output, session) {
                                     panel.background = element_blank())
         outlier_label_size = 3.25
         
+        # Set up color palette, removing unchecked days but keeping the colors the same
+        mypalette = brewer.pal(n=7, name="Paired")
+        mypalette = mypalette[is.element(daylist,input$incldays)]
         
         # Scatter plot with smoothed line: Current streak ----
         # http://www.sthda.com/sthda/RDoc/images/rcolorbrewer.png
@@ -139,7 +144,7 @@ server <- function(input, output, session) {
                   axis.ticks.length = unit(0.25, "cm"), 
                   axis.ticks.x = element_line(color="#E0E0E0"), 
                   legend.text=element_text(size=12)) +
-            scale_color_brewer(palette="Paired") +
+            scale_color_manual(values=mypalette) +
             labs(color = element_blank()) +
             scale_y_continuous(limits = c(-2, max(thisrange_df$SolveTime)/60+1.5),
                                expand = c(0,0)) +
@@ -186,15 +191,13 @@ server <- function(input, output, session) {
             theme_just_ymajors +
             geom_boxplot(data = thisrange_df, aes(x=Day2, y=as.integer(SolveTime)/60, color = Day2)) +
             scale_x_discrete() +
-            scale_color_brewer(palette="Paired") +
-            ylab("test") +
-            annot1(thisrange_df, "Mon") +
-            annot1(thisrange_df, "Tue") +
-            annot1(thisrange_df, "Wed") +
-            annot1(thisrange_df, "Thu") +
-            annot1(thisrange_df, "Fri") +
-            annot1(thisrange_df, "Sat") +
-            annot1(thisrange_df, "Sun")
+            scale_color_manual(values=mypalette) +
+            ylab("test")
+        for (d in daylist) {
+            if (any(input$incldays==d)) {
+                ybox <- ybox + annot1(thisrange_df, d)
+            }
+        }
         p1 <- insert_yaxis_grob(pmain, ybox, grid::unit(1.25, "in"), position = "right")
         ggdraw(p1)
         
