@@ -120,7 +120,7 @@ server <- function(input, output, session) {
                                     panel.grid.major.x = element_blank(),
                                     panel.grid.major = element_line(color = "#E0E0E0"),
                                     panel.background = element_blank())
-        outlier_label_size = 3.25
+        outlier_label_size = 5
         
         # Set up color palette, removing unchecked days but keeping the colors the same
         mypalette = brewer.pal(n=7, name="Paired")
@@ -137,17 +137,18 @@ server <- function(input, output, session) {
             theme(legend.key=element_blank(), 
                   plot.title = element_text(size=14, face="bold"),
                   axis.title.x = element_blank(),
-                  axis.text.x = element_text(size=12, angle=45, hjust=1), 
-                  axis.text.y = element_text(size=12),
-                  axis.title.y = element_text(size=13, margin=margin(r=10)), 
+                  axis.text.x = element_text(size=14, angle=45, hjust=1), 
+                  axis.text.y = element_text(size=14),
+                  axis.title.y = element_text(size=14, margin=margin(r=10)), 
                   axis.ticks.y = element_blank(), 
                   axis.ticks.length = unit(0.25, "cm"), 
                   axis.ticks.x = element_line(color="#E0E0E0"), 
-                  legend.text=element_text(size=12)) +
+                  legend.text=element_text(size=14)) +
             scale_color_manual(values=mypalette) +
             labs(color = element_blank()) +
             scale_y_continuous(limits = c(-2, max(thisrange_df$SolveTime)/60+1.5),
-                               expand = c(0,0))
+                               expand = c(0,0)) +
+            scale_x_date(expand=c(0,0))
         
         
         annot1 <- function(x, this_day){
@@ -169,13 +170,13 @@ server <- function(input, output, session) {
             geom_boxplot(data = thisrange_df, aes(x=Day2, y=as.integer(SolveTime)/60, color = Day2)) +
             scale_x_discrete() +
             scale_color_manual(values=mypalette) +
-            ylab("test")
+            expand_limits(x = -0.1)
         for (d in daylist) {
             if (any(input$incldays==d)) {
                 ybox <- ybox + annot1(thisrange_df, d)
             }
         }
-        p1 <- insert_yaxis_grob(pmain, ybox, grid::unit(1.25, "in"), position = "right")
+        p1 <- insert_yaxis_grob(pmain, ybox, grid::unit(1.75, "in"), position = "right")
         ggdraw(p1)
         
     })
