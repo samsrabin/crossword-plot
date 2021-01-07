@@ -49,3 +49,9 @@ for (i in seq(1, Nrecords-1)) {
 }
 # print(Nstreak)
 # print(streakStartDate)
+
+format_duration <- function(x){
+  x = as.numeric(x)
+  out <- sprintf("%d:%02d", floor(x/60), x %% 60)
+  return(out) 
+}

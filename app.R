@@ -43,8 +43,10 @@ ui <- fluidPage(
     hr(),
     
     # Show a plot of the generated distribution
-    plotOutput("xwplot",
-               width="100%"),
+    tabsetPanel(
+        tabPanel("Plot", plotOutput("xwplot", width="100%")),
+        tabPanel("Table", tableOutput("table"))
+    )
 
 )
 
@@ -64,13 +66,40 @@ server <- function(input, output, session) {
             stringsAsFactors = FALSE)
     })
     
+    output$table <- renderTable({
+        # Get the records in the date range we've specified
+        DateRange <- input$daterange
+        thisrange_df = xwords_df[xwords_df$PuzzleDate>=as.Date(DateRange[1]) & xwords_df$PuzzleDate<=as.Date(DateRange[2]),]
+        thisrange_df <- thisrange_df[order(thisrange_df$PuzzleDate),]
+        
+        out <- thisrange_df %>%
+            group_by(Day) %>%
+            summarise(Fastest = as.duration(min(SolveTime)),
+                      Median = median(SolveTime),
+                      Mean = mean(SolveTime),
+                      Slowest = max(SolveTime))
+        out$Day <- factor(out$Day, levels=c(daylist))
+        out <- out[order(out$Day), ]
+        fastest <- format_duration(out$Fastest)
+        slowest <- format_duration(out$Slowest)
+        for (d in 1:7) {
+            fastest[d] <- paste(fastest[d], " (", thisrange_df$PuzzleDate[as.numeric(thisrange_df$SolveTime)==as.numeric(out$Fastest[d])][1], ")", sep="")
+            slowest[d] <- paste(slowest[d], " (", thisrange_df$PuzzleDate[as.numeric(thisrange_df$SolveTime)==as.numeric(out$Slowest[d])][1], ")", sep="")
+        }
+        out$Fastest <- fastest
+        out$Median <- format_duration(ceiling(out$Median))
+        out$Mean <- format_duration(ceiling(out$Mean))
+        out$Slowest <- slowest
+        out
+        })
+    
     output$xwplot <- renderPlot({
         
-        # Get the records in the date range we've specified 
+        # Get the records in the date range we've specified
         DateRange <- input$daterange
         thisrange_df = xwords_df[xwords_df$PuzzleDate>=as.Date(DateRange[1]) & xwords_df$PuzzleDate<=as.Date(DateRange[2]),]
         thisrange_df = thisrange_df[order(thisrange_df$PuzzleDate),]
-        
+
         for (d in daylist) {
             if (!any(input$incldays==d)) {
                 thisrange_df = thisrange_df[thisrange_df$Day != d,]
