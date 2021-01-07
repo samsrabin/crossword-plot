@@ -19,11 +19,6 @@ ui <- fluidPage(
     
     title = "My NYT Crossword Times",
     
-    # Show a plot of the generated distribution
-    plotOutput("xwplot"),
-
-    hr(),
-    
     fluidRow(
         
         # Input: Specification of range within an interval
@@ -43,8 +38,12 @@ ui <- fluidPage(
                                   width = "95%",
                                   inline = TRUE)
         )
-    )
-
+    ),
+    
+    hr(),
+    
+    # Show a plot of the generated distribution
+    plotOutput("xwplot"),
 
 )
 
