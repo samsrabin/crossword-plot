@@ -40,7 +40,8 @@ ui <- fluidPage(
                checkboxGroupInput("incldays", "Days to include",
                                   daylist,
                                   selected = daylist,
-                                  width = "95%")
+                                  width = "95%",
+                                  inline = TRUE)
         )
     )
 
