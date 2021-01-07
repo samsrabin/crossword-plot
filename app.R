@@ -27,12 +27,12 @@ ui <- fluidPage(
     fluidRow(
         
         # Input: Specification of range within an interval
-        column(6, offset = 1,
+        column(6, offset = 0, style='padding-left:40px',
                sliderInput("daterange", "Date range:",
                            min = as.Date("2019-01-07"), max = as.Date(Sys.Date()),
                            value = c(as.Date("2019-01-07"), as.Date(Sys.Date())),
                            timeFormat="%Y-%m-%d", 
-                           width = "100%")
+                           width = "95%")
         ),
         
         # Input: Days to include
@@ -40,7 +40,7 @@ ui <- fluidPage(
                checkboxGroupInput("incldays", "Days to include",
                                   daylist,
                                   selected = daylist,
-                                  width = "100%")
+                                  width = "95%")
         )
     )
 
