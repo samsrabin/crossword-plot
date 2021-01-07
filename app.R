@@ -120,7 +120,7 @@ server <- function(input, output, session) {
                                     panel.grid.major.x = element_blank(),
                                     panel.grid.major = element_line(color = "#E0E0E0"),
                                     panel.background = element_blank())
-        outlier_label_size = 5
+        outlier_label_size = 4.5
         
         # Set up color palette, removing unchecked days but keeping the colors the same
         mypalette = brewer.pal(n=7, name="Paired")
@@ -176,7 +176,7 @@ server <- function(input, output, session) {
                 ybox <- ybox + annot1(thisrange_df, d)
             }
         }
-        p1 <- insert_yaxis_grob(pmain, ybox, grid::unit(1.75, "in"), position = "right")
+        p1 <- insert_yaxis_grob(pmain, ybox, grid::unit(1.5, "in"), position = "right")
         ggdraw(p1)
         
     })
