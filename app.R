@@ -43,7 +43,8 @@ ui <- fluidPage(
     hr(),
     
     # Show a plot of the generated distribution
-    plotOutput("xwplot"),
+    plotOutput("xwplot",
+               width="100%"),
 
 )
 
