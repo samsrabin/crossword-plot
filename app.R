@@ -31,7 +31,7 @@ ui <- fluidPage(
         ),
         
         # Input: Days to include
-        column(4, offset = 1,
+        column(4, offset = 1, style='padding-left:40px',
                checkboxGroupInput("incldays", "Days to include",
                                   daylist,
                                   selected = daylist,
