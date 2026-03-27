@@ -74,10 +74,10 @@ server <- function(input, output, session) {
         
         out <- thisrange_df %>%
             group_by(Day) %>%
-            summarise(Fastest = as.duration(min(SolveTime)),
-                      Median = median(SolveTime),
-                      Mean = mean(SolveTime),
-                      Slowest = max(SolveTime))
+            summarise(Fastest = min(as.numeric(SolveTime)),
+                      Median = median(as.numeric(SolveTime)),
+                      Mean = mean(as.numeric(SolveTime)),
+                      Slowest = max(as.numeric(SolveTime)))
         out$Day <- factor(out$Day, levels=c(daylist))
         out <- out[order(out$Day), ]
         fastest <- format_duration(out$Fastest)
